@@ -17,14 +17,22 @@ ctx.lineWidth = 2.0; // Ширина линии
 ctx.beginPath(); // Запускает путь
 ctx.moveTo(30, 0); // Указываем начальный путь
 ctx.lineTo(30, 460); // Перемешаем указатель
-ctx.lineTo(1500, 460); // Ещё раз перемешаем указатель
+ctx.lineTo(12100, 460); // Ещё раз перемешаем указатель
 ctx.stroke(); // Делаем контур
-// Размеаем Y
+// Размечаем Y
 ctx.fillStyle = "black";
 for (let i = 0; i < 100; i++) {
-  ctx.fillText((5 - i) * 1 + " -", 10, i * 80 + 60);
+  ctx.fillText((8 - i) / 1 + " -", 10, i * 50 + 60);
+  ctx.beginPath();
 }
+//сноски по цвету
+ctx.fillText("pm10", 100, 30);
 ctx.fillStyle = "green";
+ctx.fillRect(70, 22, 20, 10);
+ctx.fillStyle = "black";
+ctx.fillText("pm2_5", 100, 50);
+ctx.fillStyle = "blue";
+ctx.fillRect(70, 42, 20, 10);
 
 fetch(API_URL_GEO_DATA)
   .then((resp) => resp.json())
@@ -39,16 +47,14 @@ fetch(API_URL_GEO_DATA)
       .then(function (data) {
         //время : количество частиц pm10 : количество частиц pm2_5
         for (let i = 0; i < data.hourly.time.length; i++) {
-          // let ol = createNode("ol");
-          // let hr = createNode("hr");
-          // let p = createNode("p");
-          // p.innerHTML = `Дата и время: ${data.hourly.time[i]} <br> pm10: ${data.hourly.pm10[i]} <br> pm2_5: ${data.hourly.pm2_5[i]}`;
-          // append(ol, p);
-          // append(ol, hr);
-          // append(div, ol);
+          ctx.fillStyle = "black";
+          ctx.fillText(data.hourly.time[i], 20 + i * 100, 475);
           var pm10 = data.hourly.pm10[i];
           var pm2_5 = data.hourly.pm2_5[i];
-          ctx.fillRect(40 + i * 100, 460 - pm10, 50, pm10 * 10);
+          ctx.fillStyle = "green";
+          ctx.fillRect(40 + i * 100, 460 - pm10 * 50, 25, pm10 * 50);
+          ctx.fillStyle = "blue";
+          ctx.fillRect(70 + i * 100, 460 - pm2_5 * 50, 25, pm2_5 * 50);
         }
       })
       .catch(function (error) {
