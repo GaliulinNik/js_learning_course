@@ -5,12 +5,6 @@ const API_URL_GEO_DATA = `https://geocode-maps.yandex.ru/1.x/?apikey=${API_KEY_Y
 const canvas = document.getElementById("canvas"); //получаем элемент
 const ctx = canvas.getContext("2d"); //настройка для рисования 2D
 
-function createNode(element) {
-  return document.createElement(element);
-}
-function append(parent, element) {
-  return parent.appendChild(element);
-}
 //Рисуем вертикальную и горизонтальную оси
 ctx.fillStyle = "black"; // Задаём чёрный цвет для линий
 ctx.lineWidth = 2.0; // Ширина линии
