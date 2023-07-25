@@ -11,7 +11,7 @@ ctx.lineWidth = 2.0; // Ширина линии
 ctx.beginPath(); // Запускает путь
 ctx.moveTo(30, 0); // Указываем начальный путь
 ctx.lineTo(30, 460); // Перемешаем указатель
-ctx.lineTo(12100, 460); // Ещё раз перемешаем указатель
+ctx.lineTo(620, 460); // Ещё раз перемешаем указатель
 ctx.stroke(); // Делаем контур
 // Размечаем Y
 ctx.fillStyle = "black";
@@ -36,20 +36,53 @@ fetch(API_URL_GEO_DATA)
     console.log(strCoordinates);
     let coordinates = strCoordinates.split(" "); //разбили строку на массив строк используя разделитель пробел
     const API_OPEN_METEO = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${coordinates[0]}&longitude=${coordinates[1]}&hourly=pm10,pm2_5`;
+    console.log(API_OPEN_METEO);
+    let avgData = {
+      date: [],
+      pm10: [],
+      pm2_5: [],
+    };
     fetch(API_OPEN_METEO)
       .then((resp) => resp.json())
       .then(function (data) {
         //время : количество частиц pm10 : количество частиц pm2_5
-        for (let i = 0; i < data.hourly.time.length; i++) {
+        let newDate = data.hourly.time.map(function (item) {
+          return new Date(item).toLocaleDateString();
+        });
+        avgData.date = [...new Set(newDate)];
+        avgData.date.forEach((date, index) => {
+          avgData.pm10[index] = 0;
+          avgData.pm2_5[index] = 0;
+          count = 1;
+          for (let i = 0; i < newDate.length; i++) {
+            if (newDate[i] == date) {
+              avgData.pm10[index] = avgData.pm10[index] + data.hourly.pm10[i];
+              avgData.pm2_5[index] =
+                avgData.pm2_5[index] + data.hourly.pm2_5[i];
+              count++;
+            }
+          }
+          avgData.pm10[index] = avgData.pm10[index] / count;
+          avgData.pm2_5[index] = avgData.pm2_5[index] / count;
+
           ctx.fillStyle = "black";
-          ctx.fillText(data.hourly.time[i], 20 + i * 100, 475);
-          var pm10 = data.hourly.pm10[i];
-          var pm2_5 = data.hourly.pm2_5[i];
+          ctx.fillText(date, 40 + index * 100, 475);
+
           ctx.fillStyle = "green";
-          ctx.fillRect(40 + i * 100, 460 - pm10 * 50, 25, pm10 * 50);
+          ctx.fillRect(
+            40 + index * 100,
+            460 - avgData.pm10[index] * 50,
+            25,
+            avgData.pm10[index] * 50
+          );
           ctx.fillStyle = "blue";
-          ctx.fillRect(70 + i * 100, 460 - pm2_5 * 50, 25, pm2_5 * 50);
-        }
+          ctx.fillRect(
+            70 + index * 100,
+            460 - avgData.pm2_5[index] * 50,
+            25,
+            avgData.pm2_5[index] * 50
+          );
+        });
       })
       .catch(function (error) {
         console.log(error);
