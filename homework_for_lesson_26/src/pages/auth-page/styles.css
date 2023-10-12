@@ -2,3 +2,9 @@
   height: 100vh;
   background: linear-gradient(90deg, #ffffff 55%, #7db8f0 91%);
 }
+.auth-page img {
+  width: 15em;
+  margin: 1em;
+  position: absolute;
+  top: 0em;
+}
