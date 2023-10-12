@@ -1,0 +1,10 @@
+.auth-form {
+  width: 50vw;
+  height: 100vh;
+  background: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
